@@ -2,10 +2,32 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+//    name        String? opcional
+model User {
+    id         String @id @default(uuid())
+    name       String
+    github_id  Int
+    avatar_url String
+    login      String
+
+    messages Message[]
+    @@map("users")
+}
+
+model Message {
+    id         String   @id @default(uuid())
+    text       String
+    created_at DateTime @default(now())
+
+    user    User   @relation(fields: [user_id], references: [id])
+    user_id String
+    @@map("messages")
 }
